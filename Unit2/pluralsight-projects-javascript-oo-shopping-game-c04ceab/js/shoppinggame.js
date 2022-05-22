@@ -31,25 +31,53 @@ function Product(id, name, price, expiryDate) {
 //Next we need to complete the dateDiff() function. The dateDiff() function should calculate and return the difference between two Date objects passed to it as parameters. The calculated difference between the two dates should be in number of days. Implement the dateDiff() function, making use of commonly available features of the Date and Math built-in object types as required.
 
 const dateDiff = (date1, date2) => {
-    
+    let dateDiff = Math.abs(date2.getTime() - date1.getTime());
+    let daysDiff = Math.round(dateDiff/ (1000 * 60 * 60 * 24));
+    return daysDiff;
 };
 
-// Here, use Object.defineProperty to create property - daysToExpire
+// Here, use Object.defineProperty to create property - daysToExpire; use prototype
+Object.defineProperty(Product.prototype, 'daysToExpire', {
+    get: function () {
+        return dateDiff(this.expiryDate, new Date());
+    }
+});
 
-// Add method getDetails to Product here
-
-// Define the MagicProduct class here
+// Add method getDetails to Product here; use prototype
+Product.prototype.getDetails = function () {
+    return `Product Name: ${this.name} , Product Price: ${this.price}`;
+}
+// Define the MagicProduct class here; another constructor function, child of Product(), use call() method
+function MagicProduct(id, name, price, expiryDate, points, isBonus) {
+    Product.call(this, id, name, price, expiryDate);
+    this.points = points;
+    this.isBonus = isBonus;
+};
 
 // Establish inheritance between Product() & MagicProduct() here
-
+MagicProduct.prototype = Object.create(Product.prototype);
 // Define Rating class here
-
+class Rating {
+    constructor(rate) {
+        this.rate = '';
+    }
+    set rating(value) {
+        this.rate = 'BAD';
+        if(value > 1 && value <= 4) {
+            this.rate = 'OK';
+        } else if (value >= 5 && value <= 7) {
+            this.rate = 'GOOD';
+        } else if (value > 7) {
+            this.rate = 'EXCEPTIONAL';
+        }
+    }
+}
 // Complete the loadProducts function
 const loadProducts = (map, prodId) => {
     let a = new Array();
     try {
         // Call Object.keys() to load the property names of the Product object in to prodKeys array here
-        let prodKeys = [];
+        let prodKeys = Object.keys(Product());
 
         let iterator_obj = map.entries();
 
@@ -58,8 +86,8 @@ const loadProducts = (map, prodId) => {
                 const key = item[0];
                 const value = item[1];
 
-                // Create and assign an instance of Product to prodObj here
-                let prodObj;
+                // Create and assign an instance of Product to prodObj here (new)
+                let prodObj = new Product();
 
                 if (prodObj != undefined && prodObj != null) {
                     for (let i = 0; i < prodKeys.length; i++) {
@@ -93,7 +121,7 @@ const loadMagicProducts = (map, prodId) => {
     let a = new Array();
     try {
         // Call Object.key() to load the property names of the MagicProduct object in to magProdKeys array here
-        let magProdKeys = [];
+        let magProdKeys = Object.create(MagicProduct());
 
         let iterator_obj = map.entries();
 
@@ -103,7 +131,7 @@ const loadMagicProducts = (map, prodId) => {
                 const value = item[1];
 
                 // Create and assign an instance of MagicProduct to prodObj here
-                let magProdObj;
+                let magProdObj = new MagicProduct();
 
                 if (magProdObj != undefined && magProdObj != null) {
                     for (let i = 0; i < magProdKeys.length; i++) {
@@ -184,10 +212,16 @@ function loadMasterData() {
 }
 
 // Complete this function
-const findProductById = (id) => {};
+const findProductById = (id) => {
+    return function (product) {
+        return id === product.id;
+    }
+};
 
 // Complete this function
-const generateProductId = () => {};
+const generateProductId = () => {
+    Math.floor(Math.random() * 20 + 1);
+};
 
 
 const getProduct = (prodList, pId) => {
@@ -196,7 +230,9 @@ const getProduct = (prodList, pId) => {
 
 
 // Complete this function
-const calculateBill = (prod, tBill) => {};
+const calculateBill = (prod, tBill) => {
+    return tBill + prod.price;
+};
 
 const findPointsToBill = (roundedTotal) => {
     if (roundedTotal > 10 && roundedTotal <= 100) {
@@ -218,12 +254,25 @@ const findPointsToBill = (roundedTotal) => {
 
 
 // Complete this function
-const findPointsForExpDate = (prod) => {};
+const findPointsForExpDate = (prod) => {
+    if (prod.daysToExpire < 30) {
+        return 10;
+    } else {
+        return 0;
+    }
+};
 
 
 const calculatePoints = (prod, tBill) => {
     let pointsToBill = findPointsToBill(Math.round(tBill));
     let pointsForExpDate = findPointsForExpDate(prod);
+    player.score = player.score + pointsToBill + pointsForExpDate;
+    if (prod instanceof MagicProduct && prod.isBonus) {
+        player.addPoints(prod.points);
+    } else {
+        player.deductPoints(prod.points);
+    }
+
 };
 
 // Complete this function
@@ -240,6 +289,7 @@ function init(data) {
 
         rl.question("What's your name? ", function (name) {
             // Assign the player object's name property to the user entered name here
+            player.name = name;
             console.log(`Welcome ${player.name} !!!`.blue);
             start(data);
         });
