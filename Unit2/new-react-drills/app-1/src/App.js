@@ -1,23 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react'
+
+// Create a basic react app where you type in a text box and it shows up as text on the DOM.
 
 function App() {
+  const [input, setInput] = useState("");
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input onChange={(e) => setInput(e.target.value)}/>
+      <p>{input}</p>
     </div>
   );
 }

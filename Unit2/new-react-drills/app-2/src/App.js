@@ -1,23 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 
+const colors = ["blue", "orange", "yellow", "purple"];
+
 function App() {
+  let list = colors.map((element) => {
+    return <li key={element}>{element}</li>
+    //key helps let react know what to render in a list of things
+    //when using an array, give it a key
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+      {list}
+      </ul>
     </div>
   );
 }
