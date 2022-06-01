@@ -1,23 +1,20 @@
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [character, setCharacter] = useState({});
+
+  useEffect(() => {
+    axios.get("https://bobsburgers-api.herokuapp.com/characters/1")
+    .then((res) => setCharacter(res.data))
+  },[]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Name: {character.name}</h1>
+      <h1>Occupation: {character.occupation}</h1>
+      <h1>First Episode: {character.firstEpisode}</h1>
     </div>
   );
 }

@@ -1,23 +1,20 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import Todo from './Todo'
 import './App.css';
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [input, setInput] = useState('');
+
+  const displayTasks = tasks.map((element, index) => {
+    return <Todo task={element} key={index} />
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input type="text" onChange={(e) => setInput(e.target.value)}/>
+      <button onClick={() => setTasks([...tasks, input])}>Add Task</button>
+      {displayTasks}
     </div>
   );
 }
