@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import user from '../data'
+
 
 
 const InfoCard = (props) => {
   const {index, setIndex} = props;
-  const [data, setData] = useState(user);
-  
+  const {data, setData} = props;
+
+
   const next = () => {
     if (index === (data.length -1)) {
       console.log('No more users to see.')
