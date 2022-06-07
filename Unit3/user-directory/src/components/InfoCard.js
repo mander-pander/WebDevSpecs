@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
-import data from '../data'
+import user from '../data'
 
-const InfoCard = () => {
-  const [index, setIndex] = useState(0);
 
-  // const goHome = () => {
-  //   setIndex(0);
-  // }
-
+const InfoCard = (props) => {
+  const {index, setIndex} = props;
+  const [data, setData] = useState(user);
+  
   const next = () => {
     if (index === (data.length -1)) {
       console.log('No more users to see.')
@@ -27,13 +25,18 @@ const InfoCard = () => {
   }
 
   const deleteCard = () => {
-    data.splice(index, 1);
-    index <= data.length -1 ? setIndex(index + 1) : setIndex(index -1);
+    let filteredData = data.filter((el, elIndex) => {
+      return elIndex !== index;
+    });
+    setData(filteredData);
+    if (index > filteredData.length - 1) {
+      setIndex(filteredData.length - 1);
+    }
   }
 
   return (
     <div>
-        <h3 id='count'>{data[index].id}/{data.length}</h3>
+        <h3 id='count'>{index + 1}/{data.length}</h3>
         <h1>{data[index].name.first} {data[index].name.last}</h1>
         <h1>City: {data[index].city}</h1>
         <h1>Country: {data[index].country}</h1>
@@ -50,7 +53,6 @@ const InfoCard = () => {
         <button onClick={deleteCard}>Delete</button>
         <button>New</button>
         <button onClick={next}>Next</button>
-
     </div>
   )
 }

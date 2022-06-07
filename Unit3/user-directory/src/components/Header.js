@@ -1,9 +1,18 @@
 import React from 'react';
 
-const Header = () => {
+
+const Header = (props) => {
+  // const {index, setIndex, goHome} = props;
+
+  const {goHome} = props;
+
+  // const goHome = () => {
+  //   setIndex(0);
+  // }
+
   return (
     <div>
-        <button>Home</button>
+        <button onClick={goHome}>Home</button>
     </div>
   )
 }
